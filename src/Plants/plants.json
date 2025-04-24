@@ -1,0 +1,29 @@
+[
+    {
+        "id": 1,
+        "name": "Hansrurdi",
+        "species": "Cactus",
+        "watering_interval": 14,
+        "last_watered_iso": "2025-04-23T10:38:41.827041",
+        "next_watering_iso": "2025-05-07T10:38:41.827041",
+        "image_filename": "c.png"
+    },
+    {
+        "id": 2,
+        "name": "Jakobli",
+        "species": "Aussenpflanze",
+        "watering_interval": 7,
+        "last_watered_iso": "2025-04-23T14:20:20.419177",
+        "next_watering_iso": "2025-04-30T14:20:20.419177",
+        "image_filename": "b.png"
+    },
+    {
+        "id": 3,
+        "name": "Palmtree",
+        "species": "Aussenpflanze",
+        "watering_interval": 7,
+        "last_watered_iso": "2025-04-24T13:50:50.386108",
+        "next_watering_iso": "2025-05-01T13:50:50.386108",
+        "image_filename": "a.png"
+    }
+]

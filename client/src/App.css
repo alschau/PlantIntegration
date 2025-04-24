@@ -1,0 +1,301 @@
+body {
+  font-family: sans-serif;
+  margin: 0;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.app-container {
+  max-width: 900px;
+  margin: 20px auto; /* Center the content */
+  padding: 20px;
+  background-color: #83a373;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+h1 {
+  text-align: center;
+  color: #416647; /* A green color */
+  margin-bottom: 30px;
+  font-family: "Tiny5", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 2.5rem
+}
+
+.plant-list {
+  display: grid;
+  /* Adjust grid columns based on screen size */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
+  gap: 20px; /* Space between cards */
+}
+
+.plant-card {
+  font-family: "Tiny5", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  border: 4px solid #416647;
+  padding: 15px 20px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.plant-image {
+  display: block;
+  width: 100%;
+  max-width: 120px;
+  height: auto;
+  border-radius: 6px;
+  margin-bottom: 35px;
+}
+
+.plant-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.plant-card h3 {
+  margin-top: 0;
+  margin-bottom: 5px;
+  color: #1b5e20; /* Darker green */
+}
+
+.plant-species {
+    font-size: 0.9em;
+    font-style: italic;
+    color: #555;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.plant-timer {
+  font-size: 1.4em;
+  font-weight: bold;
+  color: #416647; /* Medium green */
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.plant-timer span[style*="color: red"] { /* Target the span specifically when it's red */
+    color: #d32f2f !important; /* Strong red for needing water */
+    font-weight: bold;
+}
+
+.plant-details p {
+  font-size: 0.85em;
+  color: #666;
+  margin: 5px 0;
+  line-height: 1.4;
+}
+
+.error-message {
+  color: #d32f2f; /* Red for errors */
+  font-weight: bold;
+  text-align: center;
+  padding: 15px;
+  border: 1px solid #ef9a9a;
+  background-color: #ffebee;
+  border-radius: 4px;
+}
+
+/* Style for loading message */
+p:has(+ .plant-list) { /* Basic loading message selector */
+    text-align: center;
+    font-style: italic;
+    color: #777;
+    padding: 20px;
+}
+
+/* Optional: Style for the watering error message */
+.error-watering {
+    color: #c62828; /* Red color for errors */
+    font-size: 0.8em;
+    margin-top: 8px;
+    font-weight: bold;
+}
+
+.button-group {
+  margin-top: 15px;         /* Space above the button group */
+  display: flex;
+  justify-content: space-around; /* OR use center: */
+  /* justify-content: center; */
+  width: 100%;
+  gap: 12px;                /* Keep the space between buttons */
+  align-items: center;      /* Good practice for vertical alignment */
+}
+
+/* --- Styling for the Water Button --- */
+.water-button {
+  /* Font */
+  font-family: "Tiny5", sans-serif;
+  font-size: 1.3rem;
+  color: #ffffff;
+  letter-spacing: 1px;
+
+  /* Background and Border */
+  background-color: #416647;
+  border: none;
+  border-radius: 6px;
+
+  /* Spacing */
+  padding: 8px 18px;
+  /* width: auto; */ /* Usually not needed with padding */
+  min-width: 120px; /* Or match delete-button, or remove if not needed */
+
+  /* Interaction */
+  cursor: pointer;
+  text-align: center;
+  /* display: inline-block; */ /* Not essential in flex context */
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  /* REMOVED margin: 0; and margin-top: 15px; */
+}
+
+/* Water button hover/active/disabled states (keep as you had them) */
+.water-button:hover { background-color: #9bbf87; }
+.water-button:active { background-color: #1b5e20; transform: scale(0.98); }
+.water-button:disabled { background-color: #bdbdbd; color: #757575; cursor: not-allowed; transform: none; }
+
+
+/* --- Styling for the Delete Button --- */
+.delete-button {
+  /* Font */
+  font-family: "Tiny5", sans-serif;
+  font-size: 1.3rem;
+  color: #ffffff;
+  letter-spacing: 1px;
+
+  /* Background and Border */
+  background-color: #d32f2f;
+  border: none;
+  border-radius: 6px;
+
+  /* Spacing */
+  padding: 8px 18px;
+  min-width: 120px; /* << Made consistent (optional) */
+
+  /* Interaction */
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  /* display: inline-block; */ /* Added for consistency (optional) */
+  /* No margins needed here either */
+}
+
+/* Delete button hover/active/disabled states (keep as you had them) */
+.delete-button:hover { background-color: #c62828; }
+.delete-button:active { background-color: #b55c5c; transform: scale(0.98); }
+.delete-button:disabled { background-color: #bdbdbd; color: #757575; cursor: not-allowed; transform: none; }
+
+.toggle-form-button {
+  /* Base styles - moved from toggleButtonStyle */
+  display: block;
+  margin: 0 auto 20px auto; /* Center button and add space below */
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.2s ease; /* Optional: smooth color change */
+  font-family: "Tiny5", sans-serif;
+  font-size: 1.3rem;
+  /* Default background color (when form is hidden) */
+  background-color: #416647; /* Green */
+}
+
+/* Additional styles when the form IS visible */
+.toggle-form-button--active {
+  background-color: #f44336; /* Red */
+}
+
+/* Optional: Hover styles (can apply to base class) */
+.toggle-form-button:hover {
+  opacity: 0.8;
+}
+
+/* --- Styles for Add Plant Form --- */
+.add-plant-form {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.add-plant-form h2 {
+  font-family: "Tiny5", sans-serif; /* Use Tiny5 for form title */
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #416647; /* Match main title color? */
+  font-size: 2rem; /* Adjust size */
+}
+
+.add-plant-form .form-group {
+  margin-bottom: 15px; /* Space between form fields */
+}
+
+.add-plant-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  /* Use a readable font for labels */
+  font-family: sans-serif; /* Or inherit from body */
+  font-size: 0.9rem;
+}
+
+.add-plant-form input[type="text"],
+.add-plant-form input[type="number"] {
+  width: calc(100% - 18px); /* Full width minus padding */
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  /* Use a readable font for input text */
+  font-family: sans-serif; /* Or inherit from body */
+  font-size: 1rem;
+}
+
+ .add-plant-form small {
+   display: block;
+   font-size: 0.8rem;
+   color: #666;
+   margin-top: 3px;
+    /* Use a readable font */
+   font-family: sans-serif;
+ }
+
+/* Target the submit button specifically */
+.add-plant-form button[type="submit"] {
+  font-family: "Tiny5", sans-serif; /* Use Tiny5 for button text */
+  font-size: 1.2rem; /* Adjust size */
+  padding: 10px 20px;
+  background-color: #416647; /* Green submit color */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.add-plant-form button[type="submit"]:hover {
+   background-color: #218838; /* Darker green */
+}
+
+.add-plant-form button[type="submit"]:disabled {
+   background-color: #ccc;
+   cursor: not-allowed;
+}
+
+.add-plant-form .form-error {
+   color: red;
+   margin-top: 10px;
+   font-weight: bold;
+   font-family: sans-serif; /* Readable font for errors */
+   text-align: center;
+}
