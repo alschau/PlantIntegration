@@ -148,24 +148,27 @@ function PlantTimer({ plant, onPlantWatered, onPlantDeleted }) { // Receive onPl
       </div> */}
 
       {/* --- Add the button --- */}
-      <button
-        onClick={handleWaterClick}
-        disabled={isWatering} // Disable button while request is in progress
-        className="water-button"
-      >
-      {isWatering ? 'Watering...' : 'Water Me!'}
-      </button>
-      {/* Optional: Display watering error */}
-      {errorWatering && <p className="error-watering">{errorWatering}</p>}
+      <div className="button-group">
+        <button
+          className="water-button"
+          onClick={handleWaterClick}
+          disabled={isWatering || isDeleting} // Disable button while request is in progress
+        >
+        {isWatering ? 'Watering...' : 'Water'}
+        </button>
+        {/* Optional: Display watering error */}
+        
 
-      {/* --- Add Delete Button --- */}
-      <button
-        onClick={handleDeleteClick}
-        disabled={isDeleting || isWatering} // Disable if deleting or watering
-        className="delete-button"
-      >
-      {isDeleting ? 'Deleting...' : 'Delete'}
-          </button>
+        {/* --- Add Delete Button --- */}
+        <button
+          className="delete-button"
+          onClick={handleDeleteClick}
+          disabled={isDeleting || isWatering} // Disable if deleting or watering
+        >
+        {isDeleting ? 'Deleting...' : 'Delete'}
+            </button>
+      </div>
+      {errorWatering && <p className="error-watering">{errorWatering}</p>}
     </div>
   );
 }

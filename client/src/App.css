@@ -21,7 +21,7 @@ h1 {
   font-family: "Tiny5", sans-serif;
   font-weight: 400;
   font-style: normal;
-  font-size: 2.5rem
+  font-size: 3rem
 }
 
 .plant-list {
@@ -36,7 +36,8 @@ h1 {
   font-weight: 400;
   font-style: normal;
   border: 4px solid #416647;
-  padding: 15px 20px;
+  padding: 20px;
+  box-sizing: border-box;
   border-radius: 8px;
   background-color: #ffffff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -122,12 +123,19 @@ p:has(+ .plant-list) { /* Basic loading message selector */
 
 .button-group {
   margin-top: 15px;         /* Space above the button group */
-  display: flex;
-  justify-content: space-around; /* OR use center: */
-  /* justify-content: center; */
-  width: 100%;
-  gap: 12px;                /* Keep the space between buttons */
-  align-items: center;      /* Good practice for vertical alignment */
+  display: flex; 
+  flex-wrap: wrap;           /* Makes children align in a row */
+  justify-content: center;  /* Centers the button pair */
+  gap: 12px;                /* <<< ADDS SPACE BETWEEN BUTTONS */
+  align-items: center;
+
+}
+
+/* Ensure buttons inside don't have conflicting margin */
+.button-group .water-button,
+.button-group .delete-button {
+    margin: 0;
+
 }
 
 /* --- Styling for the Water Button --- */
@@ -332,7 +340,7 @@ p:has(+ .plant-list) { /* Basic loading message selector */
 }
 
 .add-plant-form .gallery-image.selected {
-  border-color: #4CAF50; /* Green border for selected image */
+  border-color: #416647; /* Green border for selected image */
   transform: scale(1.05); /* Keep it slightly larger */
   box-shadow: 0 0 5px rgba(76, 175, 80, 0.7); /* Optional glow */
   animation: jiggle 0.35s ease-in-out 1;
