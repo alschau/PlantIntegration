@@ -299,3 +299,54 @@ p:has(+ .plant-list) { /* Basic loading message selector */
    font-family: sans-serif; /* Readable font for errors */
    text-align: center;
 }
+
+/* --- Styles for Image Selection Gallery --- */
+.add-plant-form .image-gallery {
+  display: grid;
+  /* Adjust minmax for desired image size in the grid */
+  grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+  gap: 10px; /* Space between images */
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  background-color: #fff;
+  margin-top: 5px;
+  max-height: 250px; /* Limit height and make it scrollable */
+  overflow-y: auto; /* Add scrollbar if content overflows */
+}
+
+.add-plant-form .gallery-image {
+  width: 100%; /* Fill grid cell width */
+  height: auto; /* Maintain aspect ratio */
+  aspect-ratio: 120 / 180; /* Explicitly set aspect ratio */
+  object-fit: contain; /* Ensure whole image is visible */
+  border: 2px solid transparent; /* Placeholder for selected border */
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.1s ease;
+}
+
+.add-plant-form .gallery-image:hover {
+  border-color: #ccc; /* Light border on hover */
+  transform: scale(1.05);
+}
+
+.add-plant-form .gallery-image.selected {
+  border-color: #4CAF50; /* Green border for selected image */
+  transform: scale(1.05); /* Keep it slightly larger */
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.7); /* Optional glow */
+}
+
+.add-plant-form .selected-image-text {
+    font-size: 0.9em;
+    color: #333;
+    margin-top: 8px;
+    font-weight: bold;
+    font-family: sans-serif; /* Readable font */
+}
+
+/* Adjust label style if needed */
+.add-plant-form label {
+    /* ... existing styles ... */
+    font-family: sans-serif; /* Ensure label is readable */
+}

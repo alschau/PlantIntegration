@@ -1,134 +1,123 @@
 // src/AddPlantForm.js
 import React, { useState } from 'react';
-import './App.css';
+import './App.css'; // Ensure you have styles for the form and image gallery
+// We'll add styles to App.css, ensure it's imported in App.js or index.js
 
-function AddPlantForm({ onPlantAdded }) { // Receive callback function as prop
+// Define the list of available image filenames
+const availableImageFiles = Array.from({ length: 16 }, (_, i) => `P${i + 1}.png`);
+// Generates ['P1.png', 'P2.png', ..., 'P16.png']
+
+function AddPlantForm({ onPlantAdded }) {
   const [name, setName] = useState('');
   const [species, setSpecies] = useState('');
-  const [interval, setInterval] = useState(7); // Default interval
-  const [imageFilename, setImageFilename] = useState('');
+  const [interval, setInterval] = useState(7);
+  // --- State for selected image filename ---
+  const [selectedImage, setSelectedImage] = useState(null); // Use null when nothing selected
+  // --- Remove imageFilename state ---
+  // const [imageFilename, setImageFilename] = useState('');
+
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (event) => {
-    event.preventDefault(); // Prevent default HTML form submission
-    setError(null); // Clear previous errors
-    setIsSubmitting(true);
+  const handleImageSelect = (filename) => {
+      setSelectedImage(filename); // Update state when an image is clicked
+  };
 
-    // Basic validation
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setError(null);
+
+    // --- Validation ---
     if (!name.trim() || interval <= 0) {
       setError("Plant name and a positive watering interval are required.");
-      setIsSubmitting(false);
       return;
     }
+    // --- Ensure an image is selected ---
+    if (!selectedImage) {
+        setError("Please select an image for the plant.");
+        return;
+    }
+    // --- End Validation ---
+
+    setIsSubmitting(true);
 
     const newPlantData = {
       name: name.trim(),
-      species: species.trim() || null, // Send null if empty
-      watering_interval: parseInt(interval, 10), // Ensure it's a number
-      image_filename: imageFilename.trim() || null, // Send null if empty
+      species: species.trim() || null,
+      watering_interval: parseInt(interval, 10),
+      // --- Use the selected image state ---
+      image_filename: selectedImage,
     };
 
-    // Send data to the backend API
+    // Fetch remains the same
     fetch('/plants', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newPlantData),
     })
-    .then(res => {
-      if (!res.ok) {
-        // If status is not 2xx, try to get error message from response body
-        return res.json().then(errData => {
-            throw new Error(`Failed to add plant: ${errData.error || res.statusText}`);
-        }).catch(() => {
-            // Fallback if response body isn't JSON or doesn't have 'error'
-            throw new Error(`Failed to add plant. Status: ${res.status}`);
-        });
-      }
-      // Check specifically for 201 Created status
-      if (res.status === 201) {
-          return res.json(); // Get the newly created plant data
-      } else {
-          // Handle unexpected success status codes if needed
-          console.warn("Received unexpected success status:", res.status);
-          return res.json();
-      }
+    .then(res => { /* Error handling as before */
+        if (!res.ok) { return res.json().then(errData => { throw new Error(`Failed to add plant: ${errData.error || res.statusText}`); }).catch(() => { throw new Error(`Failed to add plant. Status: ${res.status}`); }); }
+        if (res.status === 201) { return res.json(); } else { console.warn("Unexpected success status:", res.status); return res.json(); }
     })
     .then(addedPlant => {
       console.log("Plant added successfully:", addedPlant);
-      onPlantAdded(addedPlant); // Call the function passed from App component
-      // Reset form fields
+      onPlantAdded(addedPlant);
+      // Reset form fields, including selected image
       setName('');
       setSpecies('');
       setInterval(7);
-      setImageFilename('');
+      setSelectedImage(null); // Clear selection
       setIsSubmitting(false);
     })
     .catch(err => {
       console.error("Error adding plant:", err);
-      setError(err.message); // Display error to user
+      setError(err.message);
       setIsSubmitting(false);
     });
   };
 
-//   // Basic form styling (can be moved to CSS)
-//   const formStyle = {
-//       border: '1px solid #ccc', padding: '20px', marginBottom: '20px', borderRadius: '8px', backgroundColor: '#f9f9f9'
-//   };
-//   const inputGroupStyle = { marginBottom: '10px' };
-//   const labelStyle = { display: 'block', marginBottom: '5px', fontWeight: 'bold' };
-//   const inputStyle = { width: 'calc(100% - 16px)', padding: '8px', border: '1px solid #ccc', borderRadius: '4px'};
-//   const buttonStyle = { padding: '10px 20px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' };
-//   const errorStyle = { color: 'red', marginTop: '10px' };
-
-return (
-    // --- ADD className HERE ---
+  return (
+    // Use className for styling from App.css
     <form onSubmit={handleSubmit} className="add-plant-form">
       <h2>Add a New Plant</h2>
-      {/* Remove inline styles from divs/labels/inputs if desired */}
+      {/* Input fields for name, species, interval (keep as before) */}
       <div className="form-group">
         <label htmlFor="plantName">Plant Name*:</label>
-        <input
-          type="text"
-          id="plantName"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
+        <input type="text" id="plantName" value={name} onChange={(e) => setName(e.target.value)} required />
       </div>
       <div className="form-group">
         <label htmlFor="plantSpecies">Species:</label>
-        <input
-          type="text"
-          id="plantSpecies"
-          value={species}
-          onChange={(e) => setSpecies(e.target.value)}
-        />
+        <input type="text" id="plantSpecies" value={species} onChange={(e) => setSpecies(e.target.value)} />
       </div>
       <div className="form-group">
         <label htmlFor="plantInterval">Watering Interval (days)*:</label>
-        <input
-          type="number"
-          id="plantInterval"
-          value={interval}
-          onChange={(e) => setInterval(e.target.value)}
-          required
-          min="1"
-        />
+        <input type="number" id="plantInterval" value={interval} onChange={(e) => setInterval(e.target.value)} required min="1" />
       </div>
+
+      {/* --- Image Selection Gallery --- */}
       <div className="form-group">
-        <label htmlFor="plantImage">Image Filename (e.g., c.png):</label>
-        <input
-          type="text"
-          id="plantImage"
-          value={imageFilename}
-          onChange={(e) => setImageFilename(e.target.value)}
-        />
-         <small>(Place image in `src/Images`)</small>
+        <label>Select Plant Image*:</label>
+        <div className="image-gallery">
+          {availableImageFiles.map(filename => (
+            <img
+              key={filename}
+              // Construct URL using Flask static path
+              src={`/plant_images/${filename}`}
+              alt={`Select ${filename.replace('.png', '')}`} // More descriptive alt text
+              // Add 'selected' class conditionally
+              className={`gallery-image ${selectedImage === filename ? 'selected' : ''}`}
+              // Update state on click
+              onClick={() => handleImageSelect(filename)}
+            />
+          ))}
+        </div>
+        {/* Optional: Display the name of the selected image */}
+        {selectedImage && <p className="selected-image-text">Selected: {selectedImage}</p>}
       </div>
-      {/* Target the button by type */}
+      {/* --- End Image Selection --- */}
+
+
+      {/* Submit button (keep as before) */}
       <button type="submit" disabled={isSubmitting}>
         {isSubmitting ? 'Adding...' : 'Add Plant'}
       </button>

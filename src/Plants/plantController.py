@@ -35,9 +35,9 @@ class PlantController:
             return False    
 
     def setup(self):
-        p1 = Plant("Hansrurdi", "Cactus", 14, "c.png")
-        p2 = Plant("Jakobli", "Aussenpflanze", 7, "b.png")
-        p3 = Plant("Palmtree", "Aussenpflanze", 7, "a.png")
+        p1 = Plant("Hansrurdi", "Cactus", 14, "P10.png")
+        p2 = Plant("Jakobli", "Aussenpflanze", 7, "P14.png")
+        p3 = Plant("Palmtree", "Aussenpflanze", 7, "P1.png")
 
         self.plants.append(p1)
         self.plants.append(p2)
