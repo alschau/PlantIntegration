@@ -335,6 +335,7 @@ p:has(+ .plant-list) { /* Basic loading message selector */
   border-color: #4CAF50; /* Green border for selected image */
   transform: scale(1.05); /* Keep it slightly larger */
   box-shadow: 0 0 5px rgba(76, 175, 80, 0.7); /* Optional glow */
+  animation: jiggle 0.35s ease-in-out 1;
 }
 
 .add-plant-form .selected-image-text {
@@ -349,4 +350,29 @@ p:has(+ .plant-list) { /* Basic loading message selector */
 .add-plant-form label {
     /* ... existing styles ... */
     font-family: sans-serif; /* Ensure label is readable */
+}
+
+@keyframes jiggle {
+  0%, 100% {
+    transform: rotate(0deg); /* Start and end at normal rotation */
+  }
+  25% {
+    transform: rotate(-3deg); /* Rotate slightly left */
+  }
+  50% {
+    transform: rotate(3deg);  /* Rotate slightly right */
+  }
+  75% {
+    transform: rotate(-1deg); /* Smaller rotation left */
+  }
+  /* Add more steps for a more complex jiggle if desired */
+}
+
+/* Target the image when its parent card is hovered */
+.plant-card:hover .plant-image {
+  /* Apply the animation: name duration timing-function iteration-count */
+  animation: jiggle 0.35s ease-in-out 1; /* Runs the 'jiggle' animation once over 0.35s */
+
+  /* Optional: Slightly change transform-origin if rotation looks off */
+  /* transform-origin: bottom center; */
 }
