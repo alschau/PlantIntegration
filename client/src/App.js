@@ -40,8 +40,9 @@ function PlantTimer({ plant, onPlantWatered, onPlantDeleted, onPlantUpdated }) {
   const [isWatering, setIsWatering] = useState(false); // Optional: disable button during request
   const [errorWatering, setErrorWatering] = useState(null); // Optional: show watering error
   const [isDeleting, setIsDeleting] = useState(false); // Optional: disable button during request
-  const [isEditing, setIsEditing] = useState(false);
+  // const [isEditing, setIsEditing] = useState(false);
   const [animationPhase, setAnimationPhase] = useState(null);
+  const [isFlipped, setIsFlipped] = useState(false);
 
   useEffect(() => {
     // Timer calculation logic (keep as is)
@@ -171,7 +172,8 @@ function PlantTimer({ plant, onPlantWatered, onPlantDeleted, onPlantUpdated }) {
       })
       .then(updatedPlantFromServer => {
         onPlantUpdated(updatedPlantFromServer); // Update state in App component
-        setIsEditing(false); // Exit edit mode on success
+        // setIsEditing(false); // Exit edit mode on success
+        setIsFlipped(false);
         // Optional: return something to indicate success to form
         return true;
       });
@@ -180,25 +182,27 @@ function PlantTimer({ plant, onPlantWatered, onPlantDeleted, onPlantUpdated }) {
 
   // --- Handler to cancel editing ---
   const handleCancelEdit = () => {
-    setIsEditing(false); // Simply exit edit mode
+    // setIsEditing(false); // Simply exit edit mode
+    console.log(`Plant ${plant.id} - handleCancelEdit Called`);
+    setIsFlipped(false);
+    
   };
 
-
+  const handleFlipToEdit = (event) => {
+    event.stopPropagation(); // Prevent click from bubbling up if card itself is clickable
+    console.log(`Plant ${plant.id} - handleFlipToEdit CLICKED`);
+    setIsFlipped(true);
+    console.log(`Plant ${plant.id} - setIsFlipped(true) CALLED.`);
+  };
 
   return (
     <div className="plant-card">
+      {/* This inner div will flip - apply conditional class here */}
+      <div className={`plant-card-flipper ${isFlipped ? 'is-flipped' : ''}`}>
 
-      {/* --- Conditional Rendering --- */}
-      {isEditing ? (
-        // --- Show Edit Form when isEditing is true ---
-        <EditPlantForm
-          plant={plant}
-          onSave={handleSaveEdit}
-          onCancel={handleCancelEdit}
-        />
-      ) : (
-        // --- Show Normal View when isEditing is false ---
-        <> {/* Use Fragment to group elements */}
+        {/* --- FRONT SIDE of the Card --- */}
+        <div className="plant-card-front">
+          {/* Normal View Content Goes Here */}
 
           <div className="plant-image-container">
             {/* Plant Image */}
@@ -229,45 +233,38 @@ function PlantTimer({ plant, onPlantWatered, onPlantDeleted, onPlantUpdated }) {
               {formatTime(remainingTime)}
             </span>
           </p>
-          {/* <div className="plant-details">
-        <p>Interval: {plant.watering_interval} days</p>
-        <p>Last Watered: {getLastWateredString()}</p>
-        <p>Next Watering Due: {getDueDateString()}</p>
-      </div> */}
 
-          {/* --- Add the button --- */}
           <div className="button-group">
-            <button
-              className="water-button"
-              onClick={handleWaterClick}
-              disabled={isWatering || isDeleting} // Disable button while request is in progress
-            >
+            <button className="water-button" onClick={handleWaterClick} disabled={isWatering || isDeleting || isFlipped}>
               {isWatering ? 'Watering...' : 'Water'}
             </button>
-            {/* Optional: Display watering error */}
-
-            <button
-              className="edit-button"
-              onClick={() => setIsEditing(true)}
-              disabled={isWatering || isDeleting}>
+            {/* Edit button now triggers the flip */}
+            <button className="edit-button" onClick={handleFlipToEdit} disabled={isWatering || isDeleting || isFlipped}>
               Edit
             </button>
-
-            {/* --- Add Delete Button --- */}
-            <button
-              className="delete-button"
-              onClick={handleDeleteClick}
-              disabled={isDeleting || isWatering} // Disable if deleting or watering
-            >
+            <button className="delete-button" onClick={handleDeleteClick} disabled={isDeleting || isWatering || isFlipped}>
               {isDeleting ? 'Deleting...' : 'Delete'}
             </button>
           </div>
           {errorWatering && <p className="error-watering">{errorWatering}</p>}
-        </>
-      )}
-    </div>
+        </div> {/* End Front Side */}
+
+
+        {/* --- BACK SIDE (Now has border, background etc.) --- */}
+        <div className="plant-card-back">
+          {/* Edit Form */}
+          <EditPlantForm
+            plant={plant}
+            onSave={handleSaveEdit}
+            onCancel={handleCancelEdit}
+          />
+        </div> {/* End Back Side */}
+
+      </div> {/* End Flipper */}
+    </div> // End Outer Card
   );
 }
+
 
 // Main App component fetches data and renders list
 function App() {
@@ -368,7 +365,7 @@ function App() {
           ) : (<p>No plants found.</p>)}
         </div>
       )}
-      <hr style={{ margin: "30px 0" }} />
+      <hr style={{ margin: "20px 0" }} />
 
       {/* --- Button to toggle form visibility --- */}
       <button

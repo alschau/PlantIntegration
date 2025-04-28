@@ -32,22 +32,25 @@ h1 {
 }
 
 .plant-card {
-  font-family: "Tiny5", sans-serif;
+  /* font-family: "Tiny5", sans-serif;
   font-weight: 400;
   font-style: normal;
-  border: 4px solid #416647;
-  padding: 20px;
+  
+
   box-sizing: border-box;
-  border-radius: 8px;
-  background-color: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border-radius: 2px;
   transition: box-shadow 0.2s ease-in-out;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   position: relative;
-  overflow: hidden;
+  overflow: hidden; */
+  perspective: 1000px;
+  min-height: 500px; /* <<< Adjust! Minimum height for the whole card space */
+  width: 100%; /* Take grid column width */
+  max-width: 350px; /* Example max width */
+  margin: auto; /* Center in grid cell if needed */
 }
 
 .plant-image-container {
@@ -146,7 +149,6 @@ p:has(+ .plant-list) { /* Basic loading message selector */
 .button-group .water-button,
 .button-group .delete-button {
     margin: 0;
-
 }
 
 /* --- Styling for the Water Button --- */
@@ -477,4 +479,92 @@ p:has(+ .plant-list) { /* Basic loading message selector */
 .edit-form-buttons button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+
+.plant-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%; /* Make inner match outer height */
+  /* Set a fixed height if needed, e.g. height: 450px; */
+  min-height: 450px; /* Example: Ensure minimum height */
+  text-align: center;
+  transition: transform 0.6s; /* Animation speed */
+  transform-style: preserve-3d; /* Enable 3D space for children */
+}
+
+/* Trigger the rotation when .is-flipped class is added */
+.plant-card.is-flipped .plant-card-inner {
+  transform: rotateY(180deg);
+}
+
+.plant-card-flipper {
+  position: relative; /* Important for absolute children */
+  width: 100%;
+  height: 100%; /* Takes height from .plant-card */
+  min-height: inherit; /* Inherit min-height from .plant-card */
+  transition: transform 0.7s; /* Animation speed */
+  transform-style: preserve-3d; /* Enable 3D space */
+}
+
+/* Position front and back faces */
+.plant-card-front,
+.plant-card-back {
+  position: absolute;
+  top: 0; /* Ensure they align */
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden; /* Hide the side facing away */
+  /* Add padding/styling for the faces themselves if needed */
+
+  display: flex; /* Use flex for content alignment */
+  flex-direction: column;
+  align-items: center;
+  /* Ensure background covers text behind it */
+  /* --- Apply card styling HERE --- */
+  background-color: #ffffff;
+  border: 4px solid #416647; /* Your dark green border */
+  border-radius: 8px;       /* Match flipper radius */
+  padding: 20px;            /* Inner padding for content */
+  box-sizing: border-box;  
+}
+
+.plant-card-front {
+  /* Front face is normally visible */
+  /* Ensure background is opaque */
+  z-index: 2;
+}
+
+.plant-card-back {
+  /* Back face starts rotated */
+  transform: rotateY(180deg);
+  /* Ensure background is opaque */
+   background-color: #f8f8f8; /* Slightly different background? */
+   /* Center form content? */
+   justify-content: center;
+}
+
+/* Ensure Edit form fits well */
+.edit-plant-form {
+    width: 100%; /* Take width of back face */
+    max-width: 300px; /* Limit form width if needed */
+    border: none; /* Remove border if form had one */
+    padding: 0; /* Remove padding if back face has it */
+    background-color: transparent; /* Use back face background */
+    box-shadow: none;
+}
+
+/* Adjust button group position if needed on front face */
+.plant-card-front .button-group {
+    /* Maybe ensure it stays at bottom? */
+    margin-top: auto; /* Pushes to bottom if front is flex column */
+    padding-bottom: 10px; /* Add some space at bottom */
+    padding: 0 5px; /* Add small horizontal padding if needed */
+    box-sizing: border-box;
+}
+
+.plant-card-flipper.is-flipped {
+  transform: rotateY(180deg);
 }
