@@ -94,11 +94,11 @@ function PlantTimer({ plant, onPlantWatered, onPlantDeleted }) { // Receive onPl
           // After another short delay, hide the animation
           const timerId2 = setTimeout(() => {
             setAnimationPhase(null); // Hide images
-          }, 450); // Duration to show Kanne2_Tropfen.png (adjust as needed)
+          }, 800); // Duration to show Kanne2_Tropfen.png (adjust as needed)
 
           // Store timer ID 2 for potential cleanup
           return timerId2; // Not strictly needed here but good practice pattern
-        }, 350); // Duration to show Kanne1.png (adjust as needed)
+        }, 500); // Duration to show Kanne1.png (adjust as needed)
 
         // Store timer ID 1 for potential cleanup
         return timerId1;
@@ -166,7 +166,7 @@ function PlantTimer({ plant, onPlantWatered, onPlantDeleted }) { // Receive onPl
 
       {animationPhase === 'kanne1' && (
           <div className="watering-animation-overlay">
-              <img src="/plant_images/Kanne1.png" alt=""/> {/* Alt can be empty for decorative animation */}
+              <img src="/plant_images/Kanne1.png" alt=""/>
           </div>
       )}
       {animationPhase === 'kanne2' && (
