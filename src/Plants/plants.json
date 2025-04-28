@@ -2,7 +2,7 @@
     {
         "id": 1,
         "name": "Hansrurdi",
-        "species": "Cactus",
+        "species": "Cactus2",
         "watering_interval": 14,
         "last_watered_iso": "2025-04-23T10:38:41.827041",
         "next_watering_iso": "2025-05-07T10:38:41.827041",
@@ -31,8 +31,8 @@
         "name": "lil hoe",
         "species": "Basilikum",
         "watering_interval": 1,
-        "last_watered_iso": "2025-04-28T10:42:36.435763",
-        "next_watering_iso": "2025-04-29T10:42:36.435763",
+        "last_watered_iso": "2025-04-28T11:55:27.029317",
+        "next_watering_iso": "2025-04-29T11:55:27.029317",
         "image_filename": "P14.png"
     },
     {
@@ -40,8 +40,8 @@
         "name": "Lauch",
         "species": "Schnittlauch",
         "watering_interval": 7,
-        "last_watered_iso": "null",
-        "next_watering_iso": "2025-05-05T10:42:36.435848",
+        "last_watered_iso": "2025-04-23T10:38:41.827041",
+        "next_watering_iso": "2025-04-30T10:38:41.827041",
         "image_filename": "P7.png"
     }
 ]

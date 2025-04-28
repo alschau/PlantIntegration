@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import AddPlantForm from './AddPlantForm';
+import EditPlantForm from './EditPlantForm';
 
 // Helper function to format remaining seconds
 function formatTime(totalSeconds) {
@@ -21,25 +22,25 @@ function formatTime(totalSeconds) {
   const pad = (num) => String(num).padStart(2, '0');
 
   if (days > 0) {
-      timeString += `${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`;
+    timeString += `${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`;
   } else if (hours > 0) {
-      timeString += `${hours}h ${pad(minutes)}m ${pad(seconds)}s`;
+    timeString += `${hours}h ${pad(minutes)}m ${pad(seconds)}s`;
   } else if (minutes > 0) {
-      timeString += `${minutes}m ${pad(seconds)}s`;
+    timeString += `${minutes}m ${pad(seconds)}s`;
   } else {
-      timeString += `${seconds}s`;
+    timeString += `${seconds}s`;
   }
 
   return timeString;
 }
 
 // Component to display a single plant's timer and info
-function PlantTimer({ plant, onPlantWatered, onPlantDeleted }) { // Receive onPlantWatered prop
+function PlantTimer({ plant, onPlantWatered, onPlantDeleted, onPlantUpdated }) { // Receive onPlantWatered prop
   const [remainingTime, setRemainingTime] = useState(0);
   const [isWatering, setIsWatering] = useState(false); // Optional: disable button during request
   const [errorWatering, setErrorWatering] = useState(null); // Optional: show watering error
   const [isDeleting, setIsDeleting] = useState(false); // Optional: disable button during request
-
+  const [isEditing, setIsEditing] = useState(false);
   const [animationPhase, setAnimationPhase] = useState(null);
 
   useEffect(() => {
@@ -152,66 +153,118 @@ function PlantTimer({ plant, onPlantWatered, onPlantDeleted }) { // Receive onPl
       });
   };
 
+  // --- Handler to initiate saving from edit form ---
+  const handleSaveEdit = (updatedData) => {
+    console.log(`Saving updates for plant ${plant.id}`, updatedData);
+    // Return the fetch promise so EditPlantForm can handle errors/finish state
+    return fetch(`/plants/${plant.id}`, {
+      method: 'PUT', // Or PATCH if backend handles partial updates
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedData)
+    })
+      .then(res => {
+        if (!res.ok) {
+          // Handle error response from backend
+          return res.json().then(err => { throw new Error(err.error || `Update failed status: ${res.status}`) });
+        }
+        return res.json(); // Updated plant data from server
+      })
+      .then(updatedPlantFromServer => {
+        onPlantUpdated(updatedPlantFromServer); // Update state in App component
+        setIsEditing(false); // Exit edit mode on success
+        // Optional: return something to indicate success to form
+        return true;
+      });
+    // Catch block could be here or in EditPlantForm as implemented above
+  };
+
+  // --- Handler to cancel editing ---
+  const handleCancelEdit = () => {
+    setIsEditing(false); // Simply exit edit mode
+  };
+
+
+
   return (
     <div className="plant-card">
 
-      <div className="plant-image-container">
-      {/* Plant Image */}
-      <img
-        src={imageUrl}
-        alt={plant.name}
-        className="plant-image"
-        // onError=... (keep if using)
-      />
+      {/* --- Conditional Rendering --- */}
+      {isEditing ? (
+        // --- Show Edit Form when isEditing is true ---
+        <EditPlantForm
+          plant={plant}
+          onSave={handleSaveEdit}
+          onCancel={handleCancelEdit}
+        />
+      ) : (
+        // --- Show Normal View when isEditing is false ---
+        <> {/* Use Fragment to group elements */}
 
-      {animationPhase === 'kanne1' && (
-          <div className="watering-animation-overlay">
-              <img src="/plant_images/Kanne1.png" alt=""/>
+          <div className="plant-image-container">
+            {/* Plant Image */}
+            <img
+              src={imageUrl}
+              alt={plant.name}
+              className="plant-image"
+            // onError=... (keep if using)
+            />
+
+            {animationPhase === 'kanne1' && (
+              <div className="watering-animation-overlay">
+                <img src="/plant_images/Kanne1.png" alt="" />
+              </div>
+            )}
+            {animationPhase === 'kanne2' && (
+              <div className="watering-animation-overlay">
+                <img src="/plant_images/Kanne2_Tropfen.png" alt="" />
+              </div>
+            )}
           </div>
-      )}
-      {animationPhase === 'kanne2' && (
-          <div className="watering-animation-overlay">
-              <img src="/plant_images/Kanne2_Tropfen.png" alt=""/>
-          </div>
-      )}
-    </div>
 
 
-      <h3>{plant.name}</h3>
-      <p className="plant-species">({plant.species || 'Unknown Species'})</p>
-      <p className="plant-timer">
-        <span style={{ color: remainingTime <= 0 ? 'red' : 'inherit' }}>
-          {formatTime(remainingTime)}
-        </span>
-      </p>
-      {/* <div className="plant-details">
+          <h3>{plant.name}</h3>
+          <p className="plant-species">({plant.species || 'Unknown Species'})</p>
+          <p className="plant-timer">
+            <span style={{ color: remainingTime <= 0 ? 'red' : 'inherit' }}>
+              {formatTime(remainingTime)}
+            </span>
+          </p>
+          {/* <div className="plant-details">
         <p>Interval: {plant.watering_interval} days</p>
         <p>Last Watered: {getLastWateredString()}</p>
         <p>Next Watering Due: {getDueDateString()}</p>
       </div> */}
 
-      {/* --- Add the button --- */}
-      <div className="button-group">
-        <button
-          className="water-button"
-          onClick={handleWaterClick}
-          disabled={isWatering || isDeleting} // Disable button while request is in progress
-        >
-        {isWatering ? 'Watering...' : 'Water'}
-        </button>
-        {/* Optional: Display watering error */}
-        
-
-        {/* --- Add Delete Button --- */}
-        <button
-          className="delete-button"
-          onClick={handleDeleteClick}
-          disabled={isDeleting || isWatering} // Disable if deleting or watering
-        >
-        {isDeleting ? 'Deleting...' : 'Delete'}
+          {/* --- Add the button --- */}
+          <div className="button-group">
+            <button
+              className="water-button"
+              onClick={handleWaterClick}
+              disabled={isWatering || isDeleting} // Disable button while request is in progress
+            >
+              {isWatering ? 'Watering...' : 'Water'}
             </button>
-      </div>
-      {errorWatering && <p className="error-watering">{errorWatering}</p>}
+            {/* Optional: Display watering error */}
+
+            <button
+              className="edit-button"
+              onClick={() => setIsEditing(true)}
+              disabled={isWatering || isDeleting}>
+              Edit
+            </button>
+
+            {/* --- Add Delete Button --- */}
+            <button
+              className="delete-button"
+              onClick={handleDeleteClick}
+              disabled={isDeleting || isWatering} // Disable if deleting or watering
+            >
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </button>
+          </div>
+          {errorWatering && <p className="error-watering">{errorWatering}</p>}
+        </>
+      )}
     </div>
   );
 }
@@ -234,28 +287,35 @@ function App() {
 
   // --- Function to update a single plant in the state ---
   const handlePlantWatered = (updatedPlant) => {
+
+    if (updatedPlant && updatedPlant.error) {
+      console.error("Update error:", updatedPlant.error);
+      // Optionally show a global error message
+      return;
+    }
     setPlants(currentPlants =>
       currentPlants.map(p =>
         // If this is the plant that was updated, replace it, otherwise keep the old one
         p.id === updatedPlant.id ? updatedPlant : p
       )
     );
+    console.log(`Updated plant ID ${updatedPlant.id} in state.`);
   };
 
   // --- Handler for when a plant is added via the form ---
   const handlePlantAdded = (newlyAddedPlant) => {
     // Check if the backend returned an error object instead
     if (newlyAddedPlant && newlyAddedPlant.error) {
-        console.error("Failed to add plant (backend error):", newlyAddedPlant.error);
-        // Optionally, show an error message to the user here
-        return;
+      console.error("Failed to add plant (backend error):", newlyAddedPlant.error);
+      // Optionally, show an error message to the user here
+      return;
     }
-     // Add the new plant to the end of the existing list
+    // Add the new plant to the end of the existing list
     setPlants(currentPlants => [...currentPlants, newlyAddedPlant]);
     console.log("App state updated with new plant:", newlyAddedPlant);
   };
 
-  // --- NEW Handler for deleting a plant ---
+  // --- Handler for deleting a plant ---
   const handlePlantDeleted = (deletedPlantId) => {
     // Filter the plants array, keeping only those whose ID does NOT match the deleted one
     setPlants(currentPlants =>
@@ -267,6 +327,22 @@ function App() {
 
   const toggleFormVisibility = () => {
     setIsFormVisible(prevState => !prevState); // Flip the boolean state
+  };
+
+  // --- Handler for when a plant is updated ---
+  const handlePlantUpdated = (updatedPlant) => {
+    // Same logic as watering: find and replace the plant in the array
+    if (updatedPlant && updatedPlant.error) {
+      console.error("Update error:", updatedPlant.error);
+      // Optionally show a global error message
+      return;
+    }
+    setPlants(currentPlants =>
+      currentPlants.map(p =>
+        p.id === updatedPlant.id ? updatedPlant : p
+      )
+    );
+    console.log(`Updated plant ID ${updatedPlant.id} in state.`);
   };
 
 
@@ -286,18 +362,19 @@ function App() {
                 plant={plant}
                 onPlantWatered={handlePlantWatered}
                 onPlantDeleted={handlePlantDeleted}
+                onPlantUpdated={handlePlantUpdated}
               />
             ))
-          ) : ( <p>No plants found.</p> )}
+          ) : (<p>No plants found.</p>)}
         </div>
       )}
-      <hr style={{margin: "30px 0"}}/>         
-      
-        {/* --- Button to toggle form visibility --- */}
-        <button 
-          onClick={toggleFormVisibility} 
-          className={`toggle-form-button ${isFormVisible ? 'toggle-form-button--active' : ''}`}>
-          {isFormVisible ? 'Nevermind' : 'Add Plant'}
+      <hr style={{ margin: "30px 0" }} />
+
+      {/* --- Button to toggle form visibility --- */}
+      <button
+        onClick={toggleFormVisibility}
+        className={`toggle-form-button ${isFormVisible ? 'toggle-form-button--active' : ''}`}>
+        {isFormVisible ? 'Nevermind' : 'Add Plant'}
       </button>
 
       {/* --- Conditionally render the Add Plant Form --- */}

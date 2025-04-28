@@ -73,12 +73,32 @@ def water_plant_api(plant_id):
         return jsonify({"error": f"Plant with ID {plant_id} not found"}), 404
 
 
+@app.route('/plants/<int:plant_id>', methods=['PUT'])
+def update_plant_api(plant_id):
+    """API endpoint to update/replace an existing plant."""
+    updated_data = request.get_json()
+    print(f"Received request to update plant ID: {plant_id} with data: {updated_data}")
 
-# Members API Route
-@app.route('/members')
-def members():
-    # This is the JSON data that will be returned when the /members endpoint is hit.
-    return {"members": ["Member1", "Member2", "Member3"]}
+    if not updated_data:
+        return jsonify({"error": "No update data provided"}), 400
+
+    try:
+        # Call controller to update plant in memory
+        updated_plant_object = s.update_plant(plant_id, updated_data)
+
+        if updated_plant_object:
+            # Persist the entire updated list
+            s.json_export()
+            print(f"Successfully updated and saved plant ID: {plant_id}")
+            return jsonify(updated_plant_object.to_dict()), 200
+        else:
+            return jsonify({"error": f"Plant with ID {plant_id} not found or update failed"}), 404
+
+    except Exception as e:
+        print(f"Error processing update request for plant {plant_id}: {e}")
+        return jsonify({"error": "An internal server error occurred during update."}), 500
+
+
 
 
 if __name__ == '__main__':

@@ -108,6 +108,25 @@ class PlantController:
         # Update the class ID counter to avoid collisions when adding new plants
         Plant._id_counter = max_id + 1
         print(f"Loaded {len(self.plants)} plants. Next ID will be {Plant._id_counter}")
-        return True # Indicate success
+        return True # Indicate success 
+    
+    def update_plant(self, plant_id, update_data):
+        """Updates the plant with the given ID using data provided. Returns updated plant or None."""
+        try:
+            for plant in self.plants:
+                if plant.plant_id == plant_id:
+                    
+                    plant.name = update_data.get('name', plant.name)
+                    plant.species = update_data.get('species', plant.species)
+                    plant.watering_interval = int(update_data.get('watering_interval', plant.watering_interval))
+                    plant.image_filename = update_data.get('image_filename', plant.image_filename)
+
+                    print(f"Controller updated plant ID: {plant_id}")
+                    return plant # Return the modified plant object
+            print(f"Controller could not find plant ID: {plant_id} to update.")
+            return None
+        except Exception as e:
+            print(f"Error updating plant {plant_id}: {e}")
+            return None
 
 

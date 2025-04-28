@@ -421,3 +421,60 @@ p:has(+ .plant-list) { /* Basic loading message selector */
   from { opacity: 0; transform: scale(0.9); }
   to { opacity: 1; transform: scale(1); }
 }
+
+/* Style for Edit button in the main card view */
+.edit-button {
+  font-family: "Tiny5", sans-serif;
+  font-size: 1.3rem;
+  color: #ffffff;
+  letter-spacing: 1px;
+  background-color: #ff9800; /* Orange color for edit */
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  min-width: 100px; /* Adjust */
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  margin: 0; /* Reset margin */
+}
+.edit-button:hover { background-color: #f57c00; }
+.edit-button:active { background-color: #e65100; transform: scale(0.98); }
+.edit-button:disabled { background-color: #bdbdbd; color: #757575; cursor: not-allowed; transform: none; }
+
+/* Styles specific to the edit form */
+.edit-plant-form h4 { /* Using h4 in the form */
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #444;
+    font-family: sans-serif; /* Maybe readable font for edit title? */
+}
+
+.edit-form-buttons {
+    display: flex;
+    justify-content: space-around; /* Space out Save/Cancel */
+    margin-top: 20px;
+}
+
+.edit-form-buttons button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-family: sans-serif; /* Readable font for save/cancel */
+    font-weight: bold;
+}
+
+.edit-form-buttons button[type="submit"] {
+    background-color: #4CAF50; /* Green */
+    color: white;
+}
+.edit-form-buttons button[type="button"] {
+    background-color: #f44336; /* Red */
+    color: white;
+}
+.edit-form-buttons button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
