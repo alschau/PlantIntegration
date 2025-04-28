@@ -40,6 +40,8 @@ function PlantTimer({ plant, onPlantWatered, onPlantDeleted }) { // Receive onPl
   const [errorWatering, setErrorWatering] = useState(null); // Optional: show watering error
   const [isDeleting, setIsDeleting] = useState(false); // Optional: disable button during request
 
+  const [animationPhase, setAnimationPhase] = useState(null);
+
   useEffect(() => {
     // Timer calculation logic (keep as is)
     const calculateRemaining = () => {
@@ -65,8 +67,9 @@ function PlantTimer({ plant, onPlantWatered, onPlantDeleted }) { // Receive onPl
 
   // --- Handler for the button click ---
   const handleWaterClick = () => {
-    setIsWatering(true); // Disable button
-    setErrorWatering(null); // Clear previous errors
+    setIsWatering(true);
+    setErrorWatering(null);
+    setAnimationPhase(null);
 
     // Send POST request to the new backend endpoint
     fetch(`/plants/${plant.id}/water`, { method: 'POST' })
@@ -78,11 +81,33 @@ function PlantTimer({ plant, onPlantWatered, onPlantDeleted }) { // Receive onPl
         console.log('Plant watered successfully:', updatedPlantData);
         onPlantWatered(updatedPlantData); // <<<< Calls App's handler with this data
         setIsWatering(false);
+
+        onPlantWatered(updatedPlantData);
+
+        // --- Start Animation Sequence ---
+        setAnimationPhase('kanne1'); // Show first image
+
+        // After a short delay, switch to the second image
+        const timerId1 = setTimeout(() => {
+          setAnimationPhase('kanne2'); // Show second image
+
+          // After another short delay, hide the animation
+          const timerId2 = setTimeout(() => {
+            setAnimationPhase(null); // Hide images
+          }, 450); // Duration to show Kanne2_Tropfen.png (adjust as needed)
+
+          // Store timer ID 2 for potential cleanup
+          return timerId2; // Not strictly needed here but good practice pattern
+        }, 350); // Duration to show Kanne1.png (adjust as needed)
+
+        // Store timer ID 1 for potential cleanup
+        return timerId1;
       })
       .catch(error => {
         console.error("Error watering plant:", error);
         setErrorWatering(error.message); // Show error message
         setIsWatering(false); // Re-enable button
+        setAnimationPhase(null);
       });
   };
 
@@ -129,11 +154,29 @@ function PlantTimer({ plant, onPlantWatered, onPlantDeleted }) { // Receive onPl
 
   return (
     <div className="plant-card">
+
+      <div className="plant-image-container">
+      {/* Plant Image */}
       <img
         src={imageUrl}
-        alt={`Pixel Art of ${plant.name}`} // Important for accessibility
+        alt={plant.name}
         className="plant-image"
+        // onError=... (keep if using)
       />
+
+      {animationPhase === 'kanne1' && (
+          <div className="watering-animation-overlay">
+              <img src="/plant_images/Kanne1.png" alt=""/> {/* Alt can be empty for decorative animation */}
+          </div>
+      )}
+      {animationPhase === 'kanne2' && (
+          <div className="watering-animation-overlay">
+              <img src="/plant_images/Kanne2_Tropfen.png" alt=""/>
+          </div>
+      )}
+    </div>
+
+
       <h3>{plant.name}</h3>
       <p className="plant-species">({plant.species || 'Unknown Species'})</p>
       <p className="plant-timer">

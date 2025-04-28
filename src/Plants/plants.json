@@ -31,8 +31,8 @@
         "name": "lil hoe",
         "species": "Basilikum",
         "watering_interval": 1,
-        "last_watered_iso": "null",
-        "next_watering_iso": "2025-04-26T12:00:52.866437",
+        "last_watered_iso": "2025-04-28T10:15:45.711569",
+        "next_watering_iso": "2025-04-29T10:15:45.711569",
         "image_filename": "P14.png"
     },
     {
@@ -41,7 +41,7 @@
         "species": "Schnittlauch",
         "watering_interval": 7,
         "last_watered_iso": "null",
-        "next_watering_iso": "2025-05-02T12:00:52.866485",
+        "next_watering_iso": "2025-05-05T10:15:45.711682",
         "image_filename": "P7.png"
     }
 ]
