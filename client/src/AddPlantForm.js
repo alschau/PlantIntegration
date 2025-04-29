@@ -82,21 +82,21 @@ function AddPlantForm({ onPlantAdded }) {
       <h2>Add a New Plant</h2>
       {/* Input fields for name, species, interval (keep as before) */}
       <div className="form-group">
-        <label htmlFor="plantName">Plant Name*:</label>
+        <label htmlFor="plantName">Plant Name:</label>
         <input type="text" id="plantName" value={name} onChange={(e) => setName(e.target.value)} required />
       </div>
       <div className="form-group">
-        <label htmlFor="plantSpecies">Species:</label>
+        <label htmlFor="plantSpecies">Species: (optional)</label>
         <input type="text" id="plantSpecies" value={species} onChange={(e) => setSpecies(e.target.value)} />
       </div>
       <div className="form-group">
-        <label htmlFor="plantInterval">Watering Interval (days)*:</label>
+        <label htmlFor="plantInterval">Watering Interval in days:</label>
         <input type="number" id="plantInterval" value={interval} onChange={(e) => setInterval(e.target.value)} required min="1" />
       </div>
 
       {/* --- Image Selection Gallery --- */}
       <div className="form-group">
-        <label>Select Plant Image*:</label>
+        <label>Select Plant Image:</label>
         <div className="image-gallery">
           {availableImageFiles.map(filename => (
             <img
@@ -111,8 +111,6 @@ function AddPlantForm({ onPlantAdded }) {
             />
           ))}
         </div>
-        {/* Optional: Display the name of the selected image */}
-        {selectedImage && <p className="selected-image-text">Selected: {selectedImage}</p>}
       </div>
       {/* --- End Image Selection --- */}
 

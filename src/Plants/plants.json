@@ -1,7 +1,7 @@
 [
     {
         "id": 1,
-        "name": "Hansrurdi2",
+        "name": "Hansrurdi",
         "species": "Cactus",
         "watering_interval": 14,
         "last_watered_iso": "2025-04-28T14:06:10.964036",
@@ -13,35 +13,26 @@
         "name": "Jakobli",
         "species": "Aussenpflanze",
         "watering_interval": 7,
-        "last_watered_iso": "2025-04-23T14:20:20.419177",
-        "next_watering_iso": "2025-04-30T14:20:20.419177",
+        "last_watered_iso": "2025-04-28T14:52:44.160602",
+        "next_watering_iso": "2025-05-05T14:52:44.160602",
         "image_filename": "P14.png"
     },
     {
-        "id": 3,
-        "name": "Palmtree",
-        "species": "Aussenpflanze",
-        "watering_interval": 7,
-        "last_watered_iso": "2025-04-25T10:53:15.553060",
-        "next_watering_iso": "2025-05-02T10:53:15.553060",
-        "image_filename": "P1.png"
-    },
-    {
-        "id": 4,
-        "name": "lil hoe",
+        "id": 6,
+        "name": "lil bitch",
         "species": "Basilikum",
         "watering_interval": 1,
-        "last_watered_iso": "2025-04-28T14:36:22.560641",
-        "next_watering_iso": "2025-04-29T14:36:22.560641",
-        "image_filename": "P14.png"
+        "last_watered_iso": "2025-04-29T09:58:58.301858",
+        "next_watering_iso": "2025-04-30T09:58:58.301858",
+        "image_filename": "P16.png"
     },
     {
-        "id": 5,
-        "name": "Lauch",
-        "species": "Schnittlauch",
-        "watering_interval": 7,
-        "last_watered_iso": "2025-04-23T10:38:41.827041",
-        "next_watering_iso": "2025-04-30T10:38:41.827041",
-        "image_filename": "P7.png"
+        "id": 11,
+        "name": "ffdfsdf",
+        "species": "fs",
+        "watering_interval": 3,
+        "last_watered_iso": "2025-04-29T09:50:06.201275",
+        "next_watering_iso": "2025-05-02T09:50:06.201275",
+        "image_filename": "P15.png"
     }
 ]

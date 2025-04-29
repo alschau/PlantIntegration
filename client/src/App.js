@@ -220,7 +220,7 @@ function PlantTimer({ plant, onPlantWatered, onPlantDeleted, onPlantUpdated }) {
             )}
             {animationPhase === 'kanne2' && (
               <div className="watering-animation-overlay">
-                <img src="/plant_images/Kanne2_Tropfen.png" alt="" />
+                <img src="/plant_images/Kanne2_Drip.png" alt="" />
               </div>
             )}
           </div>
